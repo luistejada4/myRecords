@@ -9,8 +9,13 @@
 import UIKit
 import AVFoundation
 
-class MainViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, AVAudioRecorderDelegate, AVAudioPlayerDelegate {
+import MobileCoreServices
+import CoreSpotlight
+
+class MainViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, AVAudioRecorderDelegate, AVAudioPlayerDelegate, UISearchBarDelegate {
     
+    @IBOutlet weak var durationLabel: UILabel!
+    @IBOutlet weak var currentTimeLabel: UILabel!
     private var records = Array<URL>()
     
     private var filteredRecords = Array<URL>()
@@ -26,6 +31,8 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     private var grabador: AVAudioRecorder!
     private var sesion: AVAudioSession!
     private var timerPlayer: Timer!
+    
+    private var searchQuery : CSSearchQuery?
     
     
     override func viewDidLoad() {
@@ -64,6 +71,8 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
                 
             }
         }
+        
+        
     }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -71,6 +80,9 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        
+        let indexPath = IndexPath(row: 0, section: 0)
+        recordsTableView.selectRow(at: indexPath, animated: true, scrollPosition: UITableViewScrollPosition.top)
     }
     @IBAction func recordButton(_ sender: UIButton) {
         
@@ -124,6 +136,43 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         reproductor.currentTime = TimeInterval(sender.value)
         reproductor.play()
     }
+    
+    @IBAction func previousRecord(_ sender: UIButton) {
+        
+        if recordsTableView.indexPathForSelectedRow!.row != 0 {
+            
+            let indexPath = IndexPath(row: recordsTableView.indexPathForSelectedRow!.row - 1, section: 0)
+            recordsTableView.selectRow(at: indexPath, animated: true, scrollPosition: UITableViewScrollPosition.middle)
+            
+        }
+        if reproductor.isPlaying {
+            
+            reproductor.stop()
+            playRecord(url: records[recordsTableView.indexPathForSelectedRow!.row])
+            playButton.setImage(#imageLiteral(resourceName: "ic_pause"), for: .normal)
+        }
+    }
+    
+    @IBAction func nextRecord(_ sender: UIButton) {
+        
+        if recordsTableView.indexPathForSelectedRow!.row == records.count-1 {
+            
+            let indexPath = IndexPath(row: 0, section: 0)
+            recordsTableView.selectRow(at: indexPath, animated: true, scrollPosition: UITableViewScrollPosition.top)
+            
+        } else {
+            
+            let indexPath = IndexPath(row: recordsTableView.indexPathForSelectedRow!.row + 1, section: 0)
+            recordsTableView.selectRow(at: indexPath, animated: true, scrollPosition: UITableViewScrollPosition.middle)
+        }
+        if reproductor.isPlaying {
+            
+            reproductor.stop()
+            playRecord(url: records[recordsTableView.indexPathForSelectedRow!.row])
+            playButton.setImage(#imageLiteral(resourceName: "ic_pause"), for: .normal)
+        }
+    }
+    
     func numberOfSections(in tableView: UITableView) -> Int {
         
         return 1
@@ -131,16 +180,20 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        return records.count
+        return filteredRecords.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = recordsTableView.dequeueReusableCell(withIdentifier: "recordCell", for: indexPath)
         
-        cell.textLabel?.text = Utils.getFileName(url: records[indexPath.row])
+        cell.textLabel?.text = Utils.getFileName(url: filteredRecords[indexPath.row])
         
         return cell;
+    }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        self.durationLabel.text = Utils.stringFromTimeInterval(interval: reproductor.duration)
     }
     func comenzarGrabacion() {
         
@@ -177,6 +230,8 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
             recordsTableView.beginUpdates()
             recordsTableView.insertRows(at: [IndexPath(row: filteredRecords.count-1, section: 0)], with: .automatic)
             recordsTableView.endUpdates()
+            indexRecord(record: recorder.url, text: Utils.getFileName(url: recorder.url))
+            
         }
     }
     
@@ -193,7 +248,7 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
             timerSlider.maximumValue = Float(reproductor.duration)
             
             starTimerPlayer();
-            
+            self.durationLabel.text = Utils.stringFromTimeInterval(interval: self.reproductor.duration)
             reproductor.play()
             
             
@@ -210,6 +265,7 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
             playButton.setImage(#imageLiteral(resourceName: "ic_play"), for: .normal)
             timerPlayer.invalidate()
             timerSlider.setValue(0, animated: false)
+            self.currentTimeLabel.text = "0:0"
             
         }
     }
@@ -219,6 +275,7 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
             
             print("\(Float(self.reproductor.currentTime)) : \(Float(self.reproductor.duration))")
             self.timerSlider.setValue(Float(self.reproductor.currentTime), animated: true)
+            self.currentTimeLabel.text = Utils.stringFromTimeInterval(interval: self.reproductor.currentTime)
             
         })
     }
@@ -228,6 +285,95 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
             timerPlayer.invalidate()
             timerPlayer = nil
         }
+    }
+    
+    func filterRecords(text: String){
+        
+        guard text.characters.count > 0 else {
+            self.filteredRecords = self.records
+            
+            UIView.performWithoutAnimation {
+                
+                recordsTableView.reloadData()
+            }
+            
+            return
+        }
+        
+        
+        
+        
+        var allTheItems : [CSSearchableItem] = []
+        
+        self.searchQuery?.cancel()
+        
+        let queryString = "contentDescription == \"*\(text)*\"c"
+        self.searchQuery = CSSearchQuery(queryString: queryString, attributes: nil)
+        
+        self.searchQuery?.foundItemsHandler = { items in
+            allTheItems.append(contentsOf: items)
+        }
+        
+        self.searchQuery?.completionHandler = { error in
+            DispatchQueue.main.async { [unowned self] in
+                self.activateFilter(matches: allTheItems)
+            }
+        }
+        
+        self.searchQuery?.start()
+        
+    }
+    
+    func activateFilter(matches: [CSSearchableItem]){
+        
+        self.filteredRecords = matches.map { item in
+            let uniqueID = item.uniqueIdentifier
+            let url = URL(fileURLWithPath: uniqueID)
+            return url
+        }
+        
+        UIView.performWithoutAnimation {
+            recordsTableView.reloadData()
+        }
+        
+        
+    }
+    
+    func indexRecord(record: URL, text: String){
+        let attributeSet = CSSearchableItemAttributeSet(itemContentType: kUTTypeText as String)
+        attributeSet.title = "Grabacion de myRecords"
+        attributeSet.contentDescription = text
+  
+        
+        let item = CSSearchableItem(uniqueIdentifier: record.path, domainIdentifier: "me.luistejada", attributeSet: attributeSet)
+        item.expirationDate = Date.distantFuture
+        
+        
+        CSSearchableIndex.default().indexSearchableItems([item]) { (error) in
+            if let error = error {
+                print("Ha habido un problema al indexar \(error)")
+            } else {
+                print("Hemos podido indexar correctamente el texto : \(text)")
+            }
+        }
+        
+    }
+    
+    func deIndexRecord(record: URL) {
+        
+        CSSearchableIndex.default().deleteSearchableItems(withIdentifiers: [record.path]) { (error) in
+            
+            if error != nil {
+                
+                print("Se elimino correctamente!")
+            }
+        }
+    }
+
+
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        
+        filterRecords(text: searchText)
     }
     func loadRecords() {
         
@@ -243,6 +389,21 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
             }
         }
         filteredRecords = records
+    }
+    override func restoreUserActivityState(_ activity: NSUserActivity) {
+        
+        
+        let path = activity.userInfo?[CSSearchableItemActivityIdentifier] as! String
+        let urlPath = URL(string: path)
+        let url = Utils.getDocumentsDirectory().appendingPathComponent((urlPath!.lastPathComponent))
+        print(url.absoluteString)
+        
+        //var index = 0
+        
+
+        
+        //recordsTableView.selectRow(at: IndexPath(row: index!, section: 0), animated: true, scrollPosition: .middle)
+        playRecord(url: url)
     }
 }
 
