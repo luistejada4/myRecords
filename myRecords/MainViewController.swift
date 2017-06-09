@@ -11,8 +11,6 @@ import AVFoundation
 
 class MainViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, AVAudioRecorderDelegate, AVAudioPlayerDelegate {
     
-    private var someObservationContext: String = "something"
-    
     private var records = Array<URL>()
     
     private var filteredRecords = Array<URL>()
