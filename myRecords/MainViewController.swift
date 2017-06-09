@@ -16,6 +16,7 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     @IBOutlet weak var durationLabel: UILabel!
     @IBOutlet weak var currentTimeLabel: UILabel!
+    
     private var records = Array<URL>()
     
     private var filteredRecords = Array<URL>()
@@ -81,8 +82,11 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        let indexPath = IndexPath(row: 0, section: 0)
-        recordsTableView.selectRow(at: indexPath, animated: true, scrollPosition: UITableViewScrollPosition.top)
+        if filteredRecords.count > 0 {
+            
+            let indexPath = IndexPath(row: 0, section: 0)
+            recordsTableView.selectRow(at: indexPath, animated: true, scrollPosition: UITableViewScrollPosition.top)
+        }
     }
     @IBAction func recordButton(_ sender: UIButton) {
         
@@ -145,14 +149,19 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
             recordsTableView.selectRow(at: indexPath, animated: true, scrollPosition: UITableViewScrollPosition.middle)
             
         }
-        if reproductor.isPlaying {
+        if reproductor == nil {
             
-            reproductor.stop()
             playRecord(url: records[recordsTableView.indexPathForSelectedRow!.row])
             playButton.setImage(#imageLiteral(resourceName: "ic_pause"), for: .normal)
+        }else {
+            if reproductor.isPlaying {
+                
+                reproductor.stop()
+                playRecord(url: records[recordsTableView.indexPathForSelectedRow!.row])
+                playButton.setImage(#imageLiteral(resourceName: "ic_pause"), for: .normal)
+            }
         }
     }
-    
     @IBAction func nextRecord(_ sender: UIButton) {
         
         if recordsTableView.indexPathForSelectedRow!.row == records.count-1 {
@@ -165,11 +174,18 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
             let indexPath = IndexPath(row: recordsTableView.indexPathForSelectedRow!.row + 1, section: 0)
             recordsTableView.selectRow(at: indexPath, animated: true, scrollPosition: UITableViewScrollPosition.middle)
         }
-        if reproductor.isPlaying {
+        if reproductor == nil {
             
-            reproductor.stop()
             playRecord(url: records[recordsTableView.indexPathForSelectedRow!.row])
             playButton.setImage(#imageLiteral(resourceName: "ic_pause"), for: .normal)
+        } else {
+            
+            if reproductor.isPlaying {
+                
+                reproductor.stop()
+                playRecord(url: records[recordsTableView.indexPathForSelectedRow!.row])
+                playButton.setImage(#imageLiteral(resourceName: "ic_pause"), for: .normal)
+            }
         }
     }
     
@@ -193,6 +209,11 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
+        if reproductor != nil {
+            
+            reproductor.stop()
+        }
+        playRecord(url: filteredRecords[indexPath.row])
         self.durationLabel.text = Utils.stringFromTimeInterval(interval: reproductor.duration)
     }
     func comenzarGrabacion() {
@@ -263,9 +284,9 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         if flag {
             
             playButton.setImage(#imageLiteral(resourceName: "ic_play"), for: .normal)
-            timerPlayer.invalidate()
             timerSlider.setValue(0, animated: false)
             self.currentTimeLabel.text = "0:0"
+            stopTimerPlayer()
             
         }
     }
@@ -343,6 +364,7 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         let attributeSet = CSSearchableItemAttributeSet(itemContentType: kUTTypeText as String)
         attributeSet.title = "Grabacion de myRecords"
         attributeSet.contentDescription = text
+        attributeSet.thumbnailData = UIImagePNGRepresentation(#imageLiteral(resourceName: "ic_mic"))
   
         
         let item = CSSearchableItem(uniqueIdentifier: record.path, domainIdentifier: "me.luistejada", attributeSet: attributeSet)
