@@ -396,14 +396,17 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         let path = activity.userInfo?[CSSearchableItemActivityIdentifier] as! String
         let urlPath = URL(string: path)
         let url = Utils.getDocumentsDirectory().appendingPathComponent((urlPath!.lastPathComponent))
-        print(url.absoluteString)
         
-        //var index = 0
+        let index = filteredRecords.index { (item) -> Bool in
+            
+            item.lastPathComponent == url.lastPathComponent
+            
+        }
         
-
-        
-        //recordsTableView.selectRow(at: IndexPath(row: index!, section: 0), animated: true, scrollPosition: .middle)
-        playRecord(url: url)
+        if let index = index {
+            
+            recordsTableView.selectRow(at: IndexPath(row: index, section: 0), animated: true, scrollPosition: .middle)
+        }
     }
 }
 
