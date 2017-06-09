@@ -1,14 +1,19 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11134" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11106"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Main View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="MainViewController" customModule="myRecords" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -16,11 +21,147 @@
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BSp-xP-Am9">
+                                <rect key="frame" x="169" y="611" width="36" height="36"/>
+                                <color key="backgroundColor" red="1" green="0.0" blue="0.059605572920000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <state key="normal" image="ic_play"/>
+                                <connections>
+                                    <action selector="playButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="pwX-Vj-YsK"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OFZ-FR-bFm">
+                                <rect key="frame" x="115" y="611" width="36" height="36"/>
+                                <color key="backgroundColor" red="1" green="0.0" blue="0.059605572920000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <state key="normal" image="ic_pevious"/>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RJc-BL-InF">
+                                <rect key="frame" x="223" y="611" width="36" height="36"/>
+                                <color key="backgroundColor" red="1" green="0.0" blue="0.059605572920000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <state key="normal" image="ic_next"/>
+                            </button>
+                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="EdV-Xo-TIS">
+                                <rect key="frame" x="37" y="573" width="300" height="31"/>
+                                <color key="tintColor" red="1" green="0.0" blue="0.059605572920000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="thumbTintColor" red="1" green="0.0" blue="0.059605572920000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <connections>
+                                    <action selector="setPlayerTimer:" destination="BYZ-38-t0r" eventType="valueChanged" id="KI7-Dh-ZJB"/>
+                                </connections>
+                            </slider>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0:00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="4Hc-aJ-Fwq">
+                                <rect key="frame" x="169" y="560" width="36" height="24"/>
+                                <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="17"/>
+                                <color key="textColor" red="1" green="0.0" blue="0.059605572920000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0:00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="z0w-Lc-x8E">
+                                <rect key="frame" x="314" y="592" width="21" height="14"/>
+                                <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="10"/>
+                                <color key="textColor" red="1" green="0.0" blue="0.059605572920000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="58" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="bcO-03-tkx">
+                                <rect key="frame" x="0.0" y="183" width="375" height="369"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="recordCell" textLabel="34J-F7-M6l" imageView="4aI-v4-4Rd" rowHeight="49" style="IBUITableViewCellStyleDefault" id="U4O-s0-bWf">
+                                        <rect key="frame" x="0.0" y="28" width="375" height="49"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="U4O-s0-bWf" id="K3m-gc-gE8">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="48.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="34J-F7-M6l">
+                                                    <rect key="frame" x="55" y="0.0" width="305" height="48.5"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFit" image="ic_records" id="4aI-v4-4Rd">
+                                                    <rect key="frame" x="15" y="11" width="25" height="25"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                </imageView>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="BYZ-38-t0r" id="I8y-Al-FsG"/>
+                                    <outlet property="delegate" destination="BYZ-38-t0r" id="Xqu-34-v0M"/>
+                                </connections>
+                            </tableView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="h9E-DW-Mr5">
+                                <rect key="frame" x="163" y="117" width="48" height="48"/>
+                                <color key="backgroundColor" red="1" green="0.0" blue="0.059605572920000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <state key="normal" image="ic_mic"/>
+                                <connections>
+                                    <action selector="recordButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="XFD-y3-Y0F"/>
+                                </connections>
+                            </button>
+                            <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="9hl-0s-dYb">
+                                <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                                <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <outlet property="delegate" destination="BYZ-38-t0r" id="QKM-mb-Hrf"/>
+                                </connections>
+                            </searchBar>
+                        </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="BSp-xP-Am9" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="295.5" id="0a6-ch-vQr"/>
+                            <constraint firstItem="EdV-Xo-TIS" firstAttribute="trailing" secondItem="z0w-Lc-x8E" secondAttribute="trailing" id="1VJ-sv-Rfx"/>
+                            <constraint firstItem="OFZ-FR-bFm" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="295.5" id="3gO-eQ-zGs"/>
+                            <constraint firstItem="EdV-Xo-TIS" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="5eg-bT-BOb"/>
+                            <constraint firstItem="z0w-Lc-x8E" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="265.5" id="8ie-Ub-HhN"/>
+                            <constraint firstItem="4Hc-aJ-Fwq" firstAttribute="top" secondItem="bcO-03-tkx" secondAttribute="bottom" constant="8" symbolic="YES" id="FLe-Ud-naj"/>
+                            <constraint firstItem="z0w-Lc-x8E" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" constant="137" id="Ggm-CS-jYo"/>
+                            <constraint firstItem="h9E-DW-Mr5" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="-192.5" id="MyU-fr-fSr"/>
+                            <constraint firstItem="RJc-BL-InF" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="295.5" id="OoP-c8-RBv"/>
+                            <constraint firstItem="bcO-03-tkx" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="34" id="PHW-cX-wW2"/>
+                            <constraint firstItem="9hl-0s-dYb" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="RwT-EJ-3lI"/>
+                            <constraint firstItem="bcO-03-tkx" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="UvJ-fI-kwO"/>
+                            <constraint firstItem="bcO-03-tkx" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-16" id="XyZ-Vs-8F2"/>
+                            <constraint firstItem="9hl-0s-dYb" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="-291.5" id="aM0-j8-rRd"/>
+                            <constraint firstItem="4Hc-aJ-Fwq" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="exL-iH-VHT"/>
+                            <constraint firstItem="4Hc-aJ-Fwq" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="238.5" id="hR6-PL-uB4"/>
+                            <constraint firstItem="EdV-Xo-TIS" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="254.5" id="iuK-IU-ADL"/>
+                            <constraint firstItem="OFZ-FR-bFm" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" constant="-54.5" id="jZ7-ov-aRe"/>
+                            <constraint firstItem="RJc-BL-InF" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" constant="53.5" id="o2n-e7-hpk"/>
+                            <constraint firstItem="9hl-0s-dYb" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="pGF-Gs-j5v"/>
+                            <constraint firstItem="BSp-xP-Am9" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="r5Y-a9-qRz"/>
+                            <constraint firstItem="h9E-DW-Mr5" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="zsW-Tw-0i7"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="nextButton" destination="RJc-BL-InF" id="UYx-m7-Azo"/>
+                        <outlet property="playButton" destination="BSp-xP-Am9" id="r7I-3k-Top"/>
+                        <outlet property="previousButton" destination="OFZ-FR-bFm" id="Lak-Lo-qwd"/>
+                        <outlet property="recordButton" destination="h9E-DW-Mr5" id="og7-AB-elF"/>
+                        <outlet property="recordsTableView" destination="bcO-03-tkx" id="djy-Pb-eXV"/>
+                        <outlet property="searchDisplayController" destination="7HA-cc-egN" id="Mj9-uV-q1P"/>
+                        <outlet property="timerSlider" destination="EdV-Xo-TIS" id="5WB-0S-oPv"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <searchDisplayController id="7HA-cc-egN">
+                    <connections>
+                        <outlet property="delegate" destination="BYZ-38-t0r" id="wMB-k0-E8w"/>
+                        <outlet property="searchBar" destination="9hl-0s-dYb" id="YhB-Mf-T09"/>
+                        <outlet property="searchContentsController" destination="BYZ-38-t0r" id="036-P0-dzp"/>
+                        <outlet property="searchResultsDataSource" destination="BYZ-38-t0r" id="JHS-5p-OIW"/>
+                        <outlet property="searchResultsDelegate" destination="BYZ-38-t0r" id="FoS-1S-7bX"/>
+                    </connections>
+                </searchDisplayController>
             </objects>
+            <point key="canvasLocation" x="53.600000000000001" y="37.331334332833585"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="ic_mic" width="48" height="48"/>
+        <image name="ic_next" width="36" height="36"/>
+        <image name="ic_pevious" width="36" height="36"/>
+        <image name="ic_play" width="36" height="36"/>
+        <image name="ic_records" width="25" height="25"/>
+    </resources>
 </document>

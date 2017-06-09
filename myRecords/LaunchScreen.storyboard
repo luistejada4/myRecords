@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="EHf-IW-A2E">
+            <objects>
+                <viewController id="01J-lp-oVM" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Llm-lL-Icb"/>
+                        <viewControllerLayoutGuide type="bottom" id="xb3-aO-Qok"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Ze5-6b-2t3">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="XcW-pR-uM3">
+                                <rect key="frame" x="37" y="574" width="300" height="31"/>
+                                <color key="thumbTintColor" red="1" green="0.0" blue="0.059605572920000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </slider>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0:00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="FWZ-17-J4D">
+                                <rect key="frame" x="169" y="560" width="36" height="24"/>
+                                <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="17"/>
+                                <color key="textColor" red="1" green="0.0" blue="0.059605572920000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0:00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="k6f-zx-Pmj">
+                                <rect key="frame" x="314" y="592" width="21" height="14"/>
+                                <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="10"/>
+                                <color key="textColor" red="1" green="0.0" blue="0.059605572920000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="MyRecords" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eXv-oL-L51">
+                                <rect key="frame" x="121" y="315" width="133" height="36"/>
+                                <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="26"/>
+                                <color key="textColor" red="1" green="0.0" blue="0.059605572920000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="FWZ-17-J4D" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" constant="238.5" id="6iE-Dd-Zwi"/>
+                            <constraint firstItem="eXv-oL-L51" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="LRP-bN-aSj"/>
+                            <constraint firstItem="XcW-pR-uM3" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" constant="255.5" id="QqJ-ep-9lj"/>
+                            <constraint firstItem="eXv-oL-L51" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leadingMargin" constant="105" id="REE-pc-bMO"/>
+                            <constraint firstItem="FWZ-17-J4D" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="Rgu-32-ZgF"/>
+                            <constraint firstItem="k6f-zx-Pmj" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" constant="265.5" id="Tia-s9-oUj"/>
+                            <constraint firstItem="eXv-oL-L51" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="aVP-51-jmh"/>
+                            <constraint firstItem="XcW-pR-uM3" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="ogJ-4D-P49"/>
+                            <constraint firstItem="XcW-pR-uM3" firstAttribute="trailing" secondItem="k6f-zx-Pmj" secondAttribute="trailing" id="yFx-ym-UWr"/>
+                            <constraint firstItem="k6f-zx-Pmj" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" constant="137" id="yY4-If-h7J"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="iYj-Kq-Ea1" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="53" y="375"/>
+        </scene>
+    </scenes>
+</document>
