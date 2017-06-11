@@ -156,8 +156,11 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         if reproductor == nil {
             
-            playButton.setImage(#imageLiteral(resourceName: "ic_pause"), for: .normal)
-            playRecord(url: records[row])
+            if filteredRecords.count > 0 {
+                
+                playButton.setImage(#imageLiteral(resourceName: "ic_pause"), for: .normal)
+                playRecord(url: records[row])
+            }
             
         } else {
             
@@ -182,8 +185,11 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     @IBAction func setPlayerTimer(_ sender: UISlider) {
         
-        reproductor.currentTime = TimeInterval(sender.value)
-        reproductor.play()
+        if reproductor != nil {
+            
+            reproductor.currentTime = TimeInterval(sender.value)
+            reproductor.play()
+        }
     }
     
     @IBAction func previousRecord(_ sender: UIButton) {
