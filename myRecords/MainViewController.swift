@@ -13,15 +13,14 @@ import MobileCoreServices
 import CoreSpotlight
 
 class MainViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, AVAudioRecorderDelegate, AVAudioPlayerDelegate, UISearchBarDelegate {
-    @IBOutlet weak var reproductorView: UIView!
     
     @IBOutlet weak var durationLabel: UILabel!
-    @IBOutlet weak var currentTimeLabel: UILabel!
     
     private var records = Array<URL>()
     
     private var filteredRecords = Array<URL>()
     
+    @IBOutlet weak var playerView: UIView!
     @IBOutlet weak var timerSlider: UISlider!
     @IBOutlet weak var recordButton: UIButton!
     @IBOutlet weak var playButton: UIButton!
@@ -35,6 +34,7 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     private var timerPlayer: Timer!
     
     private var searchQuery : CSSearchQuery?
+    private var playerUp = true
     
     
     override func viewDidLoad() {
@@ -76,6 +76,13 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
             }
         }
         
+        let swipeUpPlayer = UISwipeGestureRecognizer(target: self, action: #selector(self.swipePlayer(_:)))
+        swipeUpPlayer.direction = UISwipeGestureRecognizerDirection.up
+        playerView.addGestureRecognizer(swipeUpPlayer)
+        
+        let swipeDownPlayer = UISwipeGestureRecognizer(target: self, action: #selector(self.swipePlayer(_:)))
+        swipeDownPlayer.direction = UISwipeGestureRecognizerDirection.down
+        playerView.addGestureRecognizer(swipeDownPlayer)
         
     }
     override func didReceiveMemoryWarning() {
@@ -85,12 +92,45 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        reproductorView.layer.cornerRadius = 10.0
+        playerView.layer.cornerRadius = 10.0
         
         if filteredRecords.count > 0 {
             
             let indexPath = IndexPath(row: 0, section: 0)
             recordsTableView.selectRow(at: indexPath, animated: true, scrollPosition: UITableViewScrollPosition.top)
+        }
+    }
+    func swipePlayer(_ sender: UISwipeGestureRecognizer) {
+        
+        let direction = sender.direction
+        switch direction {
+            
+        case UISwipeGestureRecognizerDirection.down:
+            
+            if playerUp {
+                UIView.animate(withDuration: 0.3, animations: {
+                    
+                    self.playerView.center.y += self.playerView.bounds.midY
+                    self.playerUp = false
+                    print("swipe")
+                })
+            }
+            break;
+            
+        case UISwipeGestureRecognizerDirection.up:
+            
+            if !playerUp {
+                UIView.animate(withDuration: 0.3, animations: {
+                    
+                    self.playerView.center.y -= self.playerView.bounds.midY
+                    self.playerUp = true
+                    print("swipe")
+                })
+            }
+            break;
+            
+        default: break;
+            
         }
     }
     @IBAction func recordButton(_ sender: UIButton) {
@@ -233,11 +273,20 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
             let fileManager = FileManager.default
             
             do {
-                try? fileManager.removeItem(at: filteredRecords[indexPath.row])
-                filteredRecords.remove(at: indexPath.row)
                 
-                tableView.deleteRows(at: [indexPath], with: .automatic)
-                recordsTableView.reloadData()
+                let index = records.index { (item) -> Bool in
+                    
+                    item.lastPathComponent == filteredRecords[indexPath.row].lastPathComponent
+                }
+                if let index = index {
+                    
+                    try fileManager.removeItem(at: filteredRecords[indexPath.row])
+                    deIndexRecord(record: filteredRecords[indexPath.row])
+                    records.remove(at: index)
+                    filteredRecords.remove(at: indexPath.row)
+                    tableView.deleteRows(at: [indexPath], with: .automatic)
+                    recordsTableView.reloadData()
+                }
                 
             } catch {
                 
@@ -314,7 +363,6 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
             
             playButton.setImage(#imageLiteral(resourceName: "ic_play"), for: .normal)
             timerSlider.setValue(0, animated: false)
-            self.currentTimeLabel.text = "0:0"
             stopTimerPlayer()
             
         }
@@ -325,7 +373,6 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
             
             print("\(Float(self.reproductor.currentTime)) : \(Float(self.reproductor.duration))")
             self.timerSlider.setValue(Float(self.reproductor.currentTime), animated: true)
-            self.currentTimeLabel.text = Utils.stringFromTimeInterval(interval: self.reproductor.currentTime)
             
         })
     }
