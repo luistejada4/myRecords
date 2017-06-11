@@ -13,6 +13,7 @@ import MobileCoreServices
 import CoreSpotlight
 
 class MainViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, AVAudioRecorderDelegate, AVAudioPlayerDelegate, UISearchBarDelegate {
+    @IBOutlet weak var reproductorView: UIView!
     
     @IBOutlet weak var durationLabel: UILabel!
     @IBOutlet weak var currentTimeLabel: UILabel!
@@ -39,6 +40,7 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        
         loadRecords()
         
         sesion = AVAudioSession.sharedInstance()
@@ -48,9 +50,10 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         nextButton.layer.cornerRadius = 18.0
         previousButton.layer.cornerRadius = 18.0
         
-        recordsTableView.estimatedRowHeight = 44.0
-        recordsTableView.rowHeight = UITableViewAutomaticDimension
-        recordsTableView.tableFooterView = UIView(frame: CGRect.zero)
+        
+        self.recordsTableView.estimatedRowHeight = 44.0
+        self.recordsTableView.rowHeight = UITableViewAutomaticDimension
+        self.recordsTableView.tableFooterView = UIView(frame: CGRect.zero)
         
         if sesion.recordPermission() == .undetermined {
             
@@ -81,6 +84,8 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        
+        reproductorView.layer.cornerRadius = 10.0
         
         if filteredRecords.count > 0 {
             
@@ -215,6 +220,30 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         }
         playRecord(url: filteredRecords[indexPath.row])
         self.durationLabel.text = Utils.stringFromTimeInterval(interval: reproductor.duration)
+    }
+    
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        
+        return true
+    }
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        
+        if editingStyle == .delete {
+            
+            let fileManager = FileManager.default
+            
+            do {
+                try? fileManager.removeItem(at: filteredRecords[indexPath.row])
+                filteredRecords.remove(at: indexPath.row)
+                
+                tableView.deleteRows(at: [indexPath], with: .automatic)
+                recordsTableView.reloadData()
+                
+            } catch {
+                
+                print("No se pudo eliminar el archivo")
+            }
+        }
     }
     func comenzarGrabacion() {
         
