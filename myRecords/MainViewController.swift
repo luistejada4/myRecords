@@ -35,11 +35,13 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     private var searchQuery : CSSearchQuery?
     private var playerUp = true
+    private var centerPosButtonRecord : CGPoint!
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        centerPosButtonRecord = recordButton.center
         
         loadRecords()
         
@@ -51,7 +53,7 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         previousButton.layer.cornerRadius = 18.0
         
         
-        self.recordsTableView.estimatedRowHeight = 44.0
+        self.recordsTableView.estimatedRowHeight = 50.0
         self.recordsTableView.rowHeight = UITableViewAutomaticDimension
         self.recordsTableView.tableFooterView = UIView(frame: CGRect.zero)
         
@@ -108,24 +110,16 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         case UISwipeGestureRecognizerDirection.down:
             
             if playerUp {
-                UIView.animate(withDuration: 0.3, animations: {
-                    
-                    self.playerView.center.y += self.playerView.bounds.midY
-                    self.playerUp = false
-                    print("swipe")
-                })
+                
+                swipeDownPlayer()
             }
             break;
             
         case UISwipeGestureRecognizerDirection.up:
             
             if !playerUp {
-                UIView.animate(withDuration: 0.3, animations: {
-                    
-                    self.playerView.center.y -= self.playerView.bounds.midY
-                    self.playerUp = true
-                    print("swipe")
-                })
+                
+                swipeUpPlayer()
             }
             break;
             
@@ -133,15 +127,59 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
             
         }
     }
+    func swipeUpPlayer() {
+        
+        UIView.animate(withDuration: 0.3, animations: {
+            
+            self.playerView.center.y -= self.playerView.bounds.midY
+            self.playerUp = true
+            print("swipe")
+        })
+    }
+    func swipeDownPlayer() {
+        
+        UIView.animate(withDuration: 0.3, animations: {
+            
+            self.playerView.center.y += self.playerView.bounds.midY
+            self.playerUp = false
+            print("swipe")
+        })
+    }
     @IBAction func recordButton(_ sender: UIButton) {
         
         if(sender.imageView?.image == #imageLiteral(resourceName: "ic_mic"))
         {
             sender.setImage(#imageLiteral(resourceName: "ic_stop"), for: .normal)
+            UIView.animate(withDuration: 0.5, animations: {
+                
+                self.recordButton.center.x = self.view.center.x
+            }, completion: { (bool) in
+                
+                self.swipeDownPlayer()
+                
+                UIView.animate(withDuration: 0.3, animations: {
+                
+                let subView = self.playerView.subviews[0] as UIView
+                subView.alpha = 0
+                
+                })
+            })
             comenzarGrabacion()
+            
         } else {
             
             sender.setImage(#imageLiteral(resourceName: "ic_mic"), for: .normal)
+            UIView.animate(withDuration: 0.5, animations: { 
+                
+                self.recordButton.center = self.centerPosButtonRecord
+                let subView = self.playerView.subviews[0] as UIView
+                subView.alpha = 1
+                
+                
+            }, completion: { (bool) in
+                
+                self.swipeUpPlayer()
+            })
             grabador.stop()
         }
     }
@@ -286,8 +324,9 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
                 }
                 if let index = index {
                     
-                    try fileManager.removeItem(at: filteredRecords[indexPath.row])
                     deIndexRecord(record: filteredRecords[indexPath.row])
+                    print(filteredRecords[index])
+                    try fileManager.removeItem(at: filteredRecords[indexPath.row])
                     records.remove(at: index)
                     filteredRecords.remove(at: indexPath.row)
                     tableView.deleteRows(at: [indexPath], with: .automatic)
@@ -431,8 +470,7 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         self.filteredRecords = matches.map { item in
             let uniqueID = item.uniqueIdentifier
-            let url = URL(fileURLWithPath: uniqueID)
-            return url
+            return Utils.getDocumentsDirectory().appendingPathComponent(uniqueID)
         }
         
         UIView.performWithoutAnimation {
@@ -443,21 +481,23 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func indexRecord(record: URL, text: String){
+        
         let attributeSet = CSSearchableItemAttributeSet(itemContentType: kUTTypeText as String)
         attributeSet.title = "Grabacion de myRecords"
         attributeSet.contentDescription = text
         attributeSet.thumbnailData = UIImagePNGRepresentation(#imageLiteral(resourceName: "ic_mic"))
   
         
-        let item = CSSearchableItem(uniqueIdentifier: record.path, domainIdentifier: "me.luistejada", attributeSet: attributeSet)
+        let item = CSSearchableItem(uniqueIdentifier: record.lastPathComponent, domainIdentifier: "me.luistejada", attributeSet: attributeSet)
         item.expirationDate = Date.distantFuture
         
         
         CSSearchableIndex.default().indexSearchableItems([item]) { (error) in
             if let error = error {
                 print("Ha habido un problema al indexar \(error)")
+                
             } else {
-                print("Hemos podido indexar correctamente el texto : \(text)")
+                print(" \(item.uniqueIdentifier)Hemos podido indexar correctamente el texto : \(record.path)")
             }
         }
         
@@ -465,11 +505,16 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func deIndexRecord(record: URL) {
         
-        CSSearchableIndex.default().deleteSearchableItems(withIdentifiers: [record.path]) { (error) in
+        
+        CSSearchableIndex.default().deleteSearchableItems(withIdentifiers: [record.lastPathComponent]) { (error) in
             
             if error != nil {
                 
                 print("Se elimino correctamente!")
+                
+            } else {
+                
+                print("Se elimino correctamente! \(record.path)")
             }
         }
     }

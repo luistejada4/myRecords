@@ -10,7 +10,6 @@
 		18418BE51EE9FC9200FF936D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 18418BE41EE9FC9200FF936D /* Assets.xcassets */; };
 		18418BEB1EEA07F100FF936D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 18418BEA1EEA07F100FF936D /* LaunchScreen.storyboard */; };
 		18418BED1EEA170500FF936D /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18418BEC1EEA170500FF936D /* Utils.swift */; };
-		189A6EE71EEB1F7B00EC6FF9 /* TableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 189A6EE61EEB1F7B00EC6FF9 /* TableViewController.swift */; };
 		18F7AC741EE9BD07001A8F6C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18F7AC731EE9BD07001A8F6C /* AppDelegate.swift */; };
 		18F7AC761EE9BD07001A8F6C /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18F7AC751EE9BD07001A8F6C /* MainViewController.swift */; };
 		18F7AC791EE9BD07001A8F6C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 18F7AC771EE9BD07001A8F6C /* Main.storyboard */; };
@@ -20,7 +19,6 @@
 		18418BE41EE9FC9200FF936D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		18418BEA1EEA07F100FF936D /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		18418BEC1EEA170500FF936D /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
-		189A6EE61EEB1F7B00EC6FF9 /* TableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewController.swift; sourceTree = "<group>"; };
 		18F7AC701EE9BD07001A8F6C /* myRecords.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = myRecords.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		18F7AC731EE9BD07001A8F6C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		18F7AC751EE9BD07001A8F6C /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
@@ -65,7 +63,6 @@
 				18F7AC7F1EE9BD08001A8F6C /* Info.plist */,
 				18418BEA1EEA07F100FF936D /* LaunchScreen.storyboard */,
 				18418BEC1EEA170500FF936D /* Utils.swift */,
-				189A6EE61EEB1F7B00EC6FF9 /* TableViewController.swift */,
 			);
 			path = myRecords;
 			sourceTree = "<group>";
@@ -146,7 +143,6 @@
 				18F7AC761EE9BD07001A8F6C /* MainViewController.swift in Sources */,
 				18F7AC741EE9BD07001A8F6C /* AppDelegate.swift in Sources */,
 				18418BED1EEA170500FF936D /* Utils.swift in Sources */,
-				189A6EE71EEB1F7B00EC6FF9 /* TableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
